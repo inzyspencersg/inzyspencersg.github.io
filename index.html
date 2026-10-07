@@ -1,0 +1,774 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><style>body{margin:0}img{max-width:100%}</style></head><body><title>INZY Closure Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground:#EDF0F3; --surface:#FFFFFF; --surface-2:#F5F7F9;
+  --ink:#0F1720; --ink-2:#4A5763; --ink-3:#7C8896;
+  --line:#D9DFE5; --line-2:#E9EDF1;
+  --brass:#966D12; --brass-ink:#7A5809; --brass-wash:#F4EAD2;
+  --settled:#0E6A55; --settled-wash:#DDEFE9;
+  --live:#A64F17; --live-wash:#F7E7DA;
+  --shadow:0 1px 2px rgba(15,23,32,.05), 0 8px 24px -18px rgba(15,23,32,.4);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:#0B1116; --surface:#141D25; --surface-2:#101920;
+    --ink:#E8EEF3; --ink-2:#A2B0BC; --ink-3:#6F7E8B;
+    --line:#233039; --line-2:#1B252D;
+    --brass:#D9AC4A; --brass-ink:#E8C578; --brass-wash:#2C2413;
+    --settled:#48C3A0; --settled-wash:#10312A;
+    --live:#E2914F; --live-wash:#33210F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"] {
+  --ground:#0B1116; --surface:#141D25; --surface-2:#101920;
+  --ink:#E8EEF3; --ink-2:#A2B0BC; --ink-3:#6F7E8B;
+  --line:#233039; --line-2:#1B252D;
+  --brass:#D9AC4A; --brass-ink:#E8C578; --brass-wash:#2C2413;
+  --settled:#48C3A0; --settled-wash:#10312A;
+  --live:#E2914F; --live-wash:#33210F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:1000px; margin:0 auto; padding:32px 20px 72px; display:flex; flex-direction:column; gap:28px; }
+h1,h2,h3 { font-family:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif; margin:0; text-wrap:balance; letter-spacing:-.015em; }
+.n, .num, .race-num, table td.n, table th.n { font-variant-numeric:tabular-nums; }
+
+/* masthead */
+.masthead { border-bottom:2px solid var(--ink); padding-bottom:18px; display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-end; justify-content:space-between; }
+.eyebrow { font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--brass); margin:0 0 6px; }
+.masthead h1 { font-size:clamp(30px,5vw,44px); font-weight:800; }
+.masthead .window { color:var(--ink-2); font-size:14.5px; margin:6px 0 0; }
+.stamp { font-family:"IBM Plex Mono", monospace; font-size:11.5px; color:var(--ink-3); text-align:right; line-height:1.7; }
+
+/* tiles */
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+.tile { background:var(--surface); padding:16px 18px; }
+.tile .k { font-size:12.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); margin:0; }
+.tile .v { font-family:"Bricolage Grotesque", sans-serif; font-weight:700; font-size:30px; line-height:1.2; margin:4px 0 2px; font-variant-numeric:tabular-nums; }
+.tile .v .of { font-size:17px; color:var(--ink-3); font-weight:500; }
+.tile .s { font-size:13px; color:var(--ink-3); margin:0; }
+
+/* panels */
+.panel { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:22px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:18px; }
+.panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.panel-head h2 { font-size:21px; font-weight:700; }
+.panel-sub { margin:2px 0 0; color:var(--ink-3); font-size:14px; }
+.section-title { font-size:13px; font-family:"IBM Plex Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin:8px 0 -10px; }
+
+/* hero race */
+.hero { background:linear-gradient(180deg,var(--surface),var(--surface-2)); border:1px solid var(--brass); }
+.races { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; }
+.race { border:1px solid var(--line); border-radius:10px; padding:14px 16px; background:var(--surface); }
+.race-label { margin:0; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-3); display:flex; justify-content:space-between; gap:10px; }
+.race-label em { font-style:normal; font-family:"IBM Plex Mono",monospace; color:var(--brass); font-weight:600; }
+.race-win { font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:23px; margin:8px 0 0; }
+.race-num { font-family:"IBM Plex Mono",monospace; font-size:15px; color:var(--ink-2); margin:2px 0 10px; }
+
+/* ladder */
+.ladder { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; }
+.ladder li { display:grid; grid-template-columns:22px minmax(74px,auto) 1fr auto auto; align-items:center; gap:12px; padding:7px 8px; border-radius:7px; }
+.ladder li[data-lead] { background:var(--brass-wash); }
+.ladder .rank { font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3); }
+.ladder .who { font-weight:600; }
+.ladder .track { height:9px; background:var(--line-2); border-radius:2px 4px 4px 2px; overflow:hidden; }
+.ladder .fill { display:block; height:100%; background:var(--brass); border-radius:2px 4px 4px 2px; }
+.ladder .num { font-family:"IBM Plex Mono",monospace; font-size:14px; }
+.ladder .cases { font-size:12.5px; color:var(--ink-3); min-width:60px; text-align:right; }
+
+/* rewards by month */
+.mtable td.tot, .mtable th:last-child { font-weight:700; }
+.mtable td.tot { color:var(--brass-ink); }
+.mtable td.future { color:var(--ink-3); }
+.mtable tfoot td { border-top:2px solid var(--ink); font-weight:700; padding-top:9px; }
+.mstate { display:block; font-size:10px; letter-spacing:.06em; color:var(--live); font-weight:600; }
+
+/* weeks */
+.wks { display:flex; flex-direction:column; gap:12px; }
+.wk { border:1px solid var(--line); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:14px; background:var(--surface); }
+.wk-quiet { background:var(--surface-2); gap:8px; }
+.wk-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+.wk-head h3 { font-size:17px; font-weight:700; }
+.wk-dates { margin:1px 0 0; font-size:13px; color:var(--ink-3); }
+.wk-right { display:flex; align-items:center; gap:10px; }
+.wk-pot { font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--brass-ink); font-weight:600; }
+.wk-wins { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
+.wk-win { border-left:3px solid var(--brass); padding-left:13px; }
+.wk-label { margin:0 0 6px; font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); }
+.wk-earn { border-top:1px solid var(--line-2); padding-top:12px; }
+.ladder-pay li { grid-template-columns:minmax(74px,auto) 1fr auto; }
+.ladder-pay .num { color:var(--brass-ink); font-weight:600; }
+
+/* days */
+.days { display:flex; flex-direction:column; gap:14px; }
+.day { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px; display:flex; flex-direction:column; gap:14px; box-shadow:var(--shadow); }
+.day-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.day-head h3 { font-size:18px; font-weight:700; }
+.day-prizes { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+.prize { border-left:3px solid var(--brass); padding-left:13px; }
+.prize-label { margin:0; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-3); }
+.prize-label em { font-style:normal; font-family:"IBM Plex Mono",monospace; color:var(--brass); }
+.prize-win { font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:19px; margin:5px 0 0; }
+.prize-sub { margin:0; font-size:13px; color:var(--ink-3); font-variant-numeric:tabular-nums; }
+.prize-pay { margin:8px 0 0; display:flex; flex-wrap:wrap; gap:6px; }
+
+/* pills + tags */
+.pill { font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:3px 8px; border-radius:20px; white-space:nowrap; }
+.pill-paid { background:var(--settled-wash); color:var(--settled); }
+.pill-live { background:var(--live-wash); color:var(--live); }
+.tag { font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; padding:4px 9px; border-radius:4px; white-space:nowrap; }
+.tag-settled { background:var(--settled-wash); color:var(--settled); }
+.tag-live { background:var(--live-wash); color:var(--live); }
+.tag-nil { background:var(--surface-2); color:var(--ink-3); border:1px solid var(--line); }
+.tag-adj { background:var(--brass-wash); color:var(--brass-ink); margin-right:6px; }
+.adj-note { margin:0; padding:9px 12px; border-radius:7px; background:var(--surface-2); border:1px solid var(--line); color:var(--ink-2); font-size:13.5px; }
+.day-nil { gap:8px; opacity:.72; }
+
+/* tables */
+.scroll { overflow-x:auto; }
+table.grid { width:100%; border-collapse:collapse; font-size:14px; }
+table.grid th { text-align:left; font-weight:600; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); padding:6px 10px; border-bottom:1px solid var(--line); white-space:nowrap; }
+table.grid td { padding:7px 10px; border-bottom:1px solid var(--line-2); white-space:nowrap; }
+table.grid td.n, table.grid th.n { text-align:right; }
+table.grid tbody tr:last-child td { border-bottom:none; }
+
+/* ledger */
+.ledger { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0; }
+.ledger li { display:flex; justify-content:space-between; gap:16px; padding:9px 2px; border-bottom:1px dashed var(--line); }
+.ledger li:last-child { border-bottom:none; }
+.ledger .num { font-family:"IBM Plex Mono",monospace; color:var(--brass-ink); font-weight:600; }
+
+
+.notes p { margin:0 0 10px; color:var(--ink-2); font-size:14.5px; max-width:66ch; }
+.notes p:last-child { margin-bottom:0; }
+.notes code { font-family:"IBM Plex Mono",monospace; font-size:13px; background:var(--surface-2); border:1px solid var(--line-2); padding:1px 5px; border-radius:4px; }
+.empty { color:var(--ink-3); font-size:14px; margin:0; }
+@media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Activity Challenge · Sept – Dec 2026</p>
+      <h1>INZY Closure Challenge</h1>
+      <p class="window">Scored from the closure posts in <em>INZY Spencer Closure List</em>, as at Mon 5 Oct. Day 1 was Tue 8 Sept; the final title runs to 31 Dec. Weeks run Monday to Sunday.</p>
+    </div>
+    <p class="stamp">Standings as at Mon 5 Oct 2026<br>Last read from WhatsApp 6 Oct 2026, 3:41 AM</p>
+  </header>
+
+  <div class="tiles">
+    <div class="tile"><p class="k">Prize money settled</p><p class="v">$2,200</p><p class="s">8 agents paid</p></div><div class="tile"><p class="k">Cases logged</p><p class="v">51</p><p class="s">55 posts incl. top-ups</p></div><div class="tile"><p class="k">RP tracked</p><p class="v">$338,244.97</p><p class="s">SP counted at 10%</p></div><div class="tile"><p class="k">Agents on the board</p><p class="v">9<span class="of">/10</span></p><p class="s">have logged a case</p></div>
+  </div>
+
+  <section class="panel hero">
+    <header class="panel-head">
+      <div><h2>Final Champion</h2><p class="panel-sub">8 Sept – 31 Dec 2026 · $1,000 on the table</p></div>
+      <span class="tag tag-live">In progress</span>
+    </header>
+    <div class="races">
+      <div class="race">
+        <p class="race-label">Biggest case <em>$500</em></p>
+        <p class="race-win">Roy</p>
+        <p class="race-num">$42,000 single case</p>
+      </div>
+      <div class="race">
+        <p class="race-label">Highest aggregate RP <em>$500</em></p>
+        <p class="race-win">Roy</p>
+        <p class="race-num">$80,774.30 credited</p>
+      </div>
+    </div>
+    <ol class="ladder"><li data-lead="1"><span class="rank">1</span><span class="who">Roy</span><span class="track"><span class="fill" style="width:100.0%"></span></span><span class="num">$80,774.30</span><span class="cases">10 cases</span></li><li><span class="rank">2</span><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:58.8%"></span></span><span class="num">$47,507.73</span><span class="cases">6 cases</span></li><li><span class="rank">3</span><span class="who">Junxian</span><span class="track"><span class="fill" style="width:56.9%"></span></span><span class="num">$46,000</span><span class="cases">2.5 cases</span></li><li><span class="rank">4</span><span class="who">Eunice</span><span class="track"><span class="fill" style="width:45.8%"></span></span><span class="num">$37,013.92</span><span class="cases">13.5 cases</span></li><li><span class="rank">5</span><span class="who">Benek</span><span class="track"><span class="fill" style="width:41.0%"></span></span><span class="num">$33,078</span><span class="cases">2 cases</span></li><li><span class="rank">6</span><span class="who">Wenjia</span><span class="track"><span class="fill" style="width:22.9%"></span></span><span class="num">$18,498.91</span><span class="cases">5.5 cases</span></li><li><span class="rank">7</span><span class="who">Joey</span><span class="track"><span class="fill" style="width:12.9%"></span></span><span class="num">$10,445.90</span><span class="cases">3.5 cases</span></li><li><span class="rank">8</span><span class="who">Shawn Tan</span><span class="track"><span class="fill" style="width:3.0%"></span></span><span class="num">$2,400</span><span class="cases">0.5 cases</span></li><li><span class="rank">9</span><span class="who">Cheerry</span><span class="track"><span class="fill" style="width:2.5%"></span></span><span class="num">$2,031</span><span class="cases">1 case</span></li></ol>
+  </section>
+
+  
+<section class="panel">
+  <header class="panel-head"><div><h2>Rewards by month</h2>
+    <p class="panel-sub">Total prize money each agent has won in each month — daily prizes by their day, weekly prizes by the Sunday the week closes, monthly titles by their month</p></div></header>
+  <div class="scroll"><table class="grid mtable">
+    <thead><tr><th>Agent</th><th class="n">Sep</th><th class="n">Oct<span class="mstate">so far</span></th><th class="n">Nov</th><th class="n">Dec</th><th class="n">Total</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$865</td><td class="n">$250</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$1,115</td></tr><tr><td>Eunice</td><td class="n">$285</td><td class="n">$30</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$315</td></tr><tr><td>Junxian</td><td class="n">$220</td><td class="n">–</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$220</td></tr><tr><td>Jun Kai</td><td class="n">$150</td><td class="n">$30</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$180</td></tr><tr><td>Wenjia</td><td class="n">$135</td><td class="n">–</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$135</td></tr><tr><td>Benek</td><td class="n">$85</td><td class="n">$30</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$115</td></tr><tr><td>Cheerry</td><td class="n">$60</td><td class="n">–</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$60</td></tr><tr><td>Joey</td><td class="n">$60</td><td class="n">–</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$60</td></tr><tr><td>Natalie Loh</td><td class="n">–</td><td class="n">–</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">–</td></tr><tr><td>Shawn Tan</td><td class="n">–</td><td class="n">–</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">–</td></tr></tbody>
+    <tfoot><tr><td>All agents</td><td class="n">$1,860</td><td class="n">$340</td><td class="n future">—</td><td class="n future">—</td><td class="n tot">$2,200</td></tr></tfoot>
+  </table></div>
+</section>
+
+  
+<section class="panel">
+  <header class="panel-head"><div><h2>October champion</h2><p class="panel-sub">Monthly title, reset on the 1st</p></div><span class="tag tag-live">In progress</span></header>
+  <div class="races">
+    <div class="race">
+      <p class="race-label">Biggest case <em>$150</em></p>
+      <p class="race-win">Roy</p>
+      <p class="race-num">$18,000</p>
+      <p class="prize-pay"><span class="pill pill-live">not settled yet</span></p>
+    </div>
+    <div class="race">
+      <p class="race-label">Highest aggregate RP <em>$150</em></p>
+      <p class="race-win">Roy</p>
+      <p class="race-num">$9,428</p>
+      <p class="prize-pay"><span class="pill pill-live">not settled yet</span></p>
+    </div>
+  </div>
+  <ol class="ladder"><li data-lead="1"><span class="rank">1</span><span class="who">Roy</span><span class="track"><span class="fill" style="width:100.0%"></span></span><span class="num">$9,428</span><span class="cases">1 case</span></li><li><span class="rank">2</span><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:39.6%"></span></span><span class="num">$3,732.45</span><span class="cases">1.5 cases</span></li><li><span class="rank">3</span><span class="who">Eunice</span><span class="track"><span class="fill" style="width:28.2%"></span></span><span class="num">$2,662.45</span><span class="cases">1 case</span></li><li><span class="rank">4</span><span class="who">Benek</span><span class="track"><span class="fill" style="width:4.5%"></span></span><span class="num">$428</span><span class="cases">0.5 cases</span></li></ol>
+</section>
+<section class="panel">
+  <header class="panel-head"><div><h2>September champion</h2><p class="panel-sub">Monthly title, reset on the 1st</p></div><span class="tag tag-settled">Settled</span></header>
+  <div class="races">
+    <div class="race">
+      <p class="race-label">Biggest case <em>$150</em></p>
+      <p class="race-win">Roy</p>
+      <p class="race-num">$42,000</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $150</span></p>
+    </div>
+    <div class="race">
+      <p class="race-label">Highest aggregate RP <em>$150</em></p>
+      <p class="race-win">Roy</p>
+      <p class="race-num">$71,346.30</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $150</span></p>
+    </div>
+  </div>
+  <ol class="ladder"><li data-lead="1"><span class="rank">1</span><span class="who">Roy</span><span class="track"><span class="fill" style="width:100.0%"></span></span><span class="num">$71,346.30</span><span class="cases">9 cases</span></li><li><span class="rank">2</span><span class="who">Junxian</span><span class="track"><span class="fill" style="width:64.5%"></span></span><span class="num">$46,000</span><span class="cases">2.5 cases</span></li><li><span class="rank">3</span><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:61.4%"></span></span><span class="num">$43,775.28</span><span class="cases">4.5 cases</span></li><li><span class="rank">4</span><span class="who">Eunice</span><span class="track"><span class="fill" style="width:48.1%"></span></span><span class="num">$34,351.47</span><span class="cases">12.5 cases</span></li><li><span class="rank">5</span><span class="who">Benek</span><span class="track"><span class="fill" style="width:45.8%"></span></span><span class="num">$32,650</span><span class="cases">1.5 cases</span></li><li><span class="rank">6</span><span class="who">Wenjia</span><span class="track"><span class="fill" style="width:25.9%"></span></span><span class="num">$18,498.91</span><span class="cases">5.5 cases</span></li><li><span class="rank">7</span><span class="who">Joey</span><span class="track"><span class="fill" style="width:14.6%"></span></span><span class="num">$10,445.90</span><span class="cases">3.5 cases</span></li><li><span class="rank">8</span><span class="who">Shawn Tan</span><span class="track"><span class="fill" style="width:3.4%"></span></span><span class="num">$2,400</span><span class="cases">0.5 cases</span></li><li><span class="rank">9</span><span class="who">Cheerry</span><span class="track"><span class="fill" style="width:2.8%"></span></span><span class="num">$2,031</span><span class="cases">1 case</span></li></ol>
+</section>
+
+  <section class="panel"><header class="panel-head"><div><h2>Week by week</h2><p class="panel-sub">Every week since launch, and what each agent earned in it</p></div></header><div class="wks"><article class="wk"><header class="wk-head"><div><h3>Week 1</h3><p class="wk-dates">Tue 8 Sep – Sun 13 Sep</p></div><div class="wk-right"><span class="tag tag-settled">Settled</span><span class="wk-pot">$460 paid</span></div></header><div class="wk-wins"><div class="wk-win"><p class="race-label">Biggest case <em>$80</em></p><p class="prize-win">Roy</p><p class="prize-sub">$42,000</p></div><div class="wk-win"><p class="race-label">Highest aggregate RP <em>$80</em></p><p class="prize-win">Roy</p><p class="prize-sub">$26,155.30</p></div></div><div class="wk-earn"><p class="wk-label">Earned this week</p><ul class="ladder ladder-pay"><li><span class="who">Roy</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="num">$280</span></li><li><span class="who">Cheerry</span><span class="track"><span class="fill" style="width:21%"></span></span><span class="num">$60</span></li><li><span class="who">Wenjia</span><span class="track"><span class="fill" style="width:16%"></span></span><span class="num">$45</span></li><li><span class="who">Eunice</span><span class="track"><span class="fill" style="width:16%"></span></span><span class="num">$45</span></li><li><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:11%"></span></span><span class="num">$30</span></li></ul></div></article><article class="wk"><header class="wk-head"><div><h3>Week 2</h3><p class="wk-dates">Mon 14 Sep – Sun 20 Sep</p></div><div class="wk-right"><span class="tag tag-settled">Settled</span><span class="wk-pot">$460 paid</span></div></header><div class="wk-wins"><div class="wk-win"><p class="race-label">Biggest case <em>$80</em></p><p class="prize-win">Benek &amp; Roy</p><p class="prize-sub">$8,000</p></div><div class="wk-win"><p class="race-label">Highest aggregate RP <em>$80</em></p><p class="prize-win">Roy</p><p class="prize-sub">$16,150</p></div></div><div class="wk-earn"><p class="wk-label">Earned this week</p><ul class="ladder ladder-pay"><li><span class="who">Roy</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="num">$165</span></li><li><span class="who">Eunice</span><span class="track"><span class="fill" style="width:73%"></span></span><span class="num">$120</span></li><li><span class="who">Benek</span><span class="track"><span class="fill" style="width:52%"></span></span><span class="num">$85</span></li><li><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:36%"></span></span><span class="num">$60</span></li><li><span class="who">Wenjia</span><span class="track"><span class="fill" style="width:18%"></span></span><span class="num">$30</span></li></ul></div></article><article class="wk"><header class="wk-head"><div><h3>Week 3</h3><p class="wk-dates">Mon 21 Sep – Sun 27 Sep</p></div><div class="wk-right"><span class="tag tag-settled">Settled</span><span class="wk-pot">$520 paid</span></div></header><div class="wk-wins"><div class="wk-win"><p class="race-label">Biggest case <em>$80</em></p><p class="prize-win">Junxian</p><p class="prize-sub">$20,000</p></div><div class="wk-win"><p class="race-label">Highest aggregate RP <em>$80</em></p><p class="prize-win">Junxian</p><p class="prize-sub">$46,000</p></div></div><div class="wk-earn"><p class="wk-label">Earned this week</p><ul class="ladder ladder-pay"><li><span class="who">Junxian</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="num">$220</span></li><li><span class="who">Eunice</span><span class="track"><span class="fill" style="width:41%"></span></span><span class="num">$90</span></li><li><span class="who">Wenjia</span><span class="track"><span class="fill" style="width:27%"></span></span><span class="num">$60</span></li><li><span class="who">Roy</span><span class="track"><span class="fill" style="width:27%"></span></span><span class="num">$60</span></li><li><span class="who">Joey</span><span class="track"><span class="fill" style="width:27%"></span></span><span class="num">$60</span></li><li><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:14%"></span></span><span class="num">$30</span></li></ul></div></article><article class="wk"><header class="wk-head"><div><h3>Week 4</h3><p class="wk-dates">Mon 28 Sep – Sun 4 Oct</p></div><div class="wk-right"><span class="tag tag-settled">Settled</span><span class="wk-pot">$460 paid</span></div></header><div class="wk-wins"><div class="wk-win"><p class="race-label">Biggest case <em>$80</em></p><p class="prize-win">Roy</p><p class="prize-sub">$18,000</p></div><div class="wk-win"><p class="race-label">Highest aggregate RP <em>$80</em></p><p class="prize-win">Roy</p><p class="prize-sub">$12,252</p></div></div><div class="wk-earn"><p class="wk-label">Earned this week</p><ul class="ladder ladder-pay"><li><span class="who">Roy</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="num">$310</span></li><li><span class="who">Eunice</span><span class="track"><span class="fill" style="width:19%"></span></span><span class="num">$60</span></li><li><span class="who">Jun Kai</span><span class="track"><span class="fill" style="width:19%"></span></span><span class="num">$60</span></li><li><span class="who">Benek</span><span class="track"><span class="fill" style="width:10%"></span></span><span class="num">$30</span></li></ul></div></article><article class="wk"><header class="wk-head"><div><h3>Week 5</h3><p class="wk-dates">Mon 5 Oct – Sun 11 Oct</p></div><div class="wk-right"><span class="tag tag-live">In progress</span><span class="wk-pot">$0 paid</span></div></header><div class="wk-wins"><div class="wk-win"><p class="race-label">Biggest case <em>$80</em></p><p class="prize-win">Jun Kai</p><p class="prize-sub">$2,140</p></div><div class="wk-win"><p class="race-label">Highest aggregate RP <em>$80</em></p><p class="prize-win">Jun Kai</p><p class="prize-sub">$1,070</p></div></div></article></div></section>
+
+  <p class="section-title">Daily prizes</p>
+  <div class="days">
+<article class="day">
+  <header class="day-head"><h3>Mon 5 Oct</h3><span class="tag tag-live">Day in progress</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Jun Kai</p>
+      <p class="prize-sub">logged 5:56 pm · $2,140</p>
+      <p class="prize-pay"><span class="pill pill-live">not settled yet</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Jun Kai</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-live">not settled yet</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Jun Kai</td><td class="n">$1,070</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Sun 4 Oct</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy &amp; Benek</p>
+      <p class="prize-sub">logged 5:32 pm · $856</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $15</span><span class="pill pill-paid">Benek $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Benek &amp; Roy</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Benek $15</span><span class="pill pill-paid">Roy $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$428</td><td class="n">0.5</td></tr><tr><td>Benek</td><td class="n">$428</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Sat 3 Oct</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">logged 5:07 pm · $18,000</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$9,000</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Fri 2 Oct</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">logged 3:20 pm · $5,324.90</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">1 case credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$2,662.45</td><td class="n">1</td></tr><tr><td>Jun Kai</td><td class="n">$2,662.45</td><td class="n">1</td></tr></tbody>
+  </table></div>
+  
+</article><article class="day day-nil"><header class="day-head"><h3>Thu 1 Oct</h3><span class="tag tag-nil">Quiet</span></header><p class="empty">no closures posted, so no prizes awarded.</p></article>
+<article class="day">
+  <header class="day-head"><h3>Wed 30 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">logged 1:47 pm · $2,824</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">2 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$2,824</td><td class="n">2</td></tr></tbody>
+  </table></div>
+  
+</article><article class="day day-nil"><header class="day-head"><h3>Tue 29 Sep</h3><span class="tag tag-nil">Quiet</span></header><p class="empty">no closures posted, so no prizes awarded.</p></article>
+<article class="day">
+  <header class="day-head"><h3>Mon 28 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">logged 1:16 pm · $10,000</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$5,000</td><td class="n">0.5</td></tr><tr><td>Jun Kai</td><td class="n">$5,000</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Sun 27 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice</p>
+      <p class="prize-sub">logged 12:07 am · $2,400</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice</p>
+      <p class="prize-sub">2 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$3,453.72</td><td class="n">2</td></tr><tr><td>Shawn Tan</td><td class="n">$2,400</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Sat 26 Sep</h3><span class="tag tag-adj">Adjusted</span><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Joey</p>
+      <p class="prize-sub">logged 1:04 pm · $7,800</p>
+      <p class="prize-pay"><span class="pill pill-paid">Joey $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Joey</p>
+      <p class="prize-sub">3 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Joey $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$8,700.92</td><td class="n">2</td></tr><tr><td>Wenjia</td><td class="n">$6,000</td><td class="n">0.5</td></tr><tr><td>Junxian</td><td class="n">$6,000</td><td class="n">0.5</td></tr><tr><td>Jun Kai</td><td class="n">$3,900</td><td class="n">0.5</td></tr><tr><td>Joey</td><td class="n">$1,445.90</td><td class="n">3</td></tr><tr><td>Roy</td><td class="n">$1,217</td><td class="n">2.5</td></tr></tbody>
+  </table></div>
+  <p class="adj-note">Spencer&#x27;s call, 6 Oct 2026. Eunice &amp; Jun Kai posted at 1:04pm against Joey&#x27;s 1:07pm; Spencer awards both daily prizes to Joey. Most cases already computed as Joey (3.0).</p>
+</article>
+<article class="day">
+  <header class="day-head"><h3>Fri 25 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">logged 6:50 pm · $18,000</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$9,000</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Thu 24 Sep</h3><span class="tag tag-adj">Adjusted</span><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Junxian</p>
+      <p class="prize-sub">logged 6:17 pm · $8,000</p>
+      <p class="prize-pay"><span class="pill pill-paid">Junxian $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Junxian</p>
+      <p class="prize-sub">2 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Junxian $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Junxian</td><td class="n">$40,000</td><td class="n">2</td></tr><tr><td>Roy</td><td class="n">$4,000</td><td class="n">0.5</td></tr><tr><td>Wenjia</td><td class="n">$1,440</td><td class="n">0.5</td></tr><tr><td>Eunice</td><td class="n">$1,440</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  <p class="adj-note">Spencer&#x27;s call, 6 Oct 2026. Roy posted first at 6:17pm, but Jun Xian had closed earlier and said in the group he forgot to send it in.</p>
+</article><article class="day day-nil"><header class="day-head"><h3>Wed 23 Sep</h3><span class="tag tag-nil">Quiet</span></header><p class="empty">no closures posted, so no prizes awarded.</p></article>
+<article class="day">
+  <header class="day-head"><h3>Tue 22 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Wenjia</p>
+      <p class="prize-sub">logged 8:03 pm · $946</p>
+      <p class="prize-pay"><span class="pill pill-paid">Wenjia $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Wenjia</p>
+      <p class="prize-sub">1.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Wenjia $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$12,000</td><td class="n">0</td></tr><tr><td>Benek</td><td class="n">$12,000</td><td class="n">0</td></tr><tr><td>Wenjia</td><td class="n">$5,013</td><td class="n">1.5</td></tr><tr><td>Eunice</td><td class="n">$535.64</td><td class="n">1</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Mon 21 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">logged 3:40 pm · $457.80</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">1 case credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$457.80</td><td class="n">1</td></tr><tr><td>Jun Kai</td><td class="n">$457.80</td><td class="n">1</td></tr></tbody>
+  </table></div>
+  
+</article><article class="day day-nil"><header class="day-head"><h3>Sun 20 Sep</h3><span class="tag tag-nil">Quiet</span></header><p class="empty">no closures posted, so no prizes awarded.</p></article>
+<article class="day">
+  <header class="day-head"><h3>Sat 19 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">—</p>
+      <p class="prize-sub">no case logged</p>
+      <p class="prize-pay"><span class="pill pill-live">not settled yet</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">—</p>
+      <p class="prize-sub">0 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-live">not settled yet</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$3,600</td><td class="n">0</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Fri 18 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy &amp; Benek</p>
+      <p class="prize-sub">logged 12:36 pm · $5,300</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $15</span><span class="pill pill-paid">Benek $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Benek &amp; Roy</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Benek $15</span><span class="pill pill-paid">Roy $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Jun Kai</td><td class="n">$9,600</td><td class="n">0</td></tr><tr><td>Roy</td><td class="n">$2,650</td><td class="n">0.5</td></tr><tr><td>Benek</td><td class="n">$2,650</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Thu 17 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">logged 5:15 pm · $705.48</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">1 case credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$9,500</td><td class="n">0</td></tr><tr><td>Benek</td><td class="n">$5,000</td><td class="n">0</td></tr><tr><td>Eunice</td><td class="n">$705.48</td><td class="n">1</td></tr><tr><td>Jun Kai</td><td class="n">$705.48</td><td class="n">1</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Wed 16 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">logged 2:24 pm · $224</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Jun Kai</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Jun Kai $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$112</td><td class="n">0.5</td></tr><tr><td>Jun Kai</td><td class="n">$112</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Tue 15 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Wenjia</p>
+      <p class="prize-sub">logged 2:02 pm · $770</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Wenjia $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Wenjia</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Wenjia $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$385</td><td class="n">0.5</td></tr><tr><td>Wenjia</td><td class="n">$385</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Mon 14 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy &amp; Benek</p>
+      <p class="prize-sub">logged 4:59 pm · $8,000</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $15</span><span class="pill pill-paid">Benek $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice</p>
+      <p class="prize-sub">1 case credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Eunice</td><td class="n">$4,300</td><td class="n">1</td></tr><tr><td>Roy</td><td class="n">$4,000</td><td class="n">0.5</td></tr><tr><td>Benek</td><td class="n">$4,000</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Sun 13 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Wenjia &amp; Eunice</p>
+      <p class="prize-sub">logged 8:20 pm · $3,600</p>
+      <p class="prize-pay"><span class="pill pill-paid">Wenjia $15</span><span class="pill pill-paid">Eunice $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Eunice &amp; Wenjia</p>
+      <p class="prize-sub">2 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Eunice $15</span><span class="pill pill-paid">Wenjia $15</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Wenjia</td><td class="n">$5,450</td><td class="n">2</td></tr><tr><td>Eunice</td><td class="n">$5,450</td><td class="n">2</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Sat 12 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Cheerry</p>
+      <p class="prize-sub">logged 12:31 pm · $2,031</p>
+      <p class="prize-pay"><span class="pill pill-paid">Cheerry $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Cheerry</p>
+      <p class="prize-sub">1 case credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Cheerry $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Cheerry</td><td class="n">$2,031</td><td class="n">1</td></tr></tbody>
+  </table></div>
+  
+</article><article class="day day-nil"><header class="day-head"><h3>Fri 11 Sep</h3><span class="tag tag-nil">Quiet</span></header><p class="empty">no closures posted, so no prizes awarded.</p></article>
+<article class="day">
+  <header class="day-head"><h3>Thu 10 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">logged 2:23 pm · $234</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">0.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$117</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Wed 9 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">logged 4:03 pm · $2,400</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Roy</p>
+      <p class="prize-sub">1.5 cases credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Roy $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Roy</td><td class="n">$25,900</td><td class="n">1.5</td></tr></tbody>
+  </table></div>
+  
+</article>
+<article class="day">
+  <header class="day-head"><h3>Tue 8 Sep</h3><span class="tag tag-settled">Settled</span></header>
+  <div class="day-prizes">
+    <div class="prize">
+      <p class="prize-label">1st case of the day <em>$30</em></p>
+      <p class="prize-win">Wenjia &amp; Eunice</p>
+      <p class="prize-sub">logged 2:40 pm · $421.83</p>
+      <p class="prize-pay"><span class="pill pill-paid">Wenjia $15</span><span class="pill pill-paid">Eunice $15</span></p>
+    </div>
+    <div class="prize">
+      <p class="prize-label">Most cases of the day <em>$30</em></p>
+      <p class="prize-win">Jun Kai</p>
+      <p class="prize-sub">1 case credited</p>
+      <p class="prize-pay"><span class="pill pill-paid">Jun Kai $30</span></p>
+    </div>
+  </div>
+  <div class="scroll"><table class="grid">
+    <thead><tr><th>Agent</th><th class="n">RP credited</th><th class="n">Cases</th></tr></thead>
+    <tbody><tr><td>Jun Kai</td><td class="n">$24,000</td><td class="n">1</td></tr><tr><td>Joey</td><td class="n">$9,000</td><td class="n">0.5</td></tr><tr><td>Benek</td><td class="n">$9,000</td><td class="n">0.5</td></tr><tr><td>Wenjia</td><td class="n">$210.91</td><td class="n">0.5</td></tr><tr><td>Eunice</td><td class="n">$210.91</td><td class="n">0.5</td></tr><tr><td>Roy</td><td class="n">$138.30</td><td class="n">0.5</td></tr></tbody>
+  </table></div>
+  
+</article></div>
+
+  <section class="panel">
+    <header class="panel-head"><div><h2>Prize ledger</h2><p class="panel-sub">Settled days only — a day pays out once it closes</p></div></header>
+    <ul class="ledger"><li><span class="who">Roy</span><span class="num">$1,115</span></li><li><span class="who">Eunice</span><span class="num">$315</span></li><li><span class="who">Junxian</span><span class="num">$220</span></li><li><span class="who">Jun Kai</span><span class="num">$180</span></li><li><span class="who">Wenjia</span><span class="num">$135</span></li><li><span class="who">Benek</span><span class="num">$115</span></li><li><span class="who">Cheerry</span><span class="num">$60</span></li><li><span class="who">Joey</span><span class="num">$60</span></li></ul>
+  </section>
+
+  <section class="panel">
+    <header class="panel-head"><div><h2>Case log</h2><p class="panel-sub">Every closure post, exactly as filed</p></div></header>
+    <div class="scroll"><table class="grid">
+      <thead><tr><th>Date</th><th>FSC</th><th class="n">RP</th><th class="n">SP</th><th class="n">Cases</th><th class="n">RP-equiv</th><th class="n">Per agent</th><th>Posted by</th></tr></thead>
+      <tbody><tr><td>Tue 8 Sep</td><td>Wen Jia / Eunice</td><td class="n">$421.83</td><td class="n">—</td><td class="n">1</td><td class="n">$421.83</td><td class="n">$210.91</td><td>Eunice</td></tr><tr><td>Tue 8 Sep</td><td>Jun Kai</td><td class="n">$24,000</td><td class="n">—</td><td class="n">1</td><td class="n">$24,000</td><td class="n">$24,000</td><td>Jun Kai</td></tr><tr><td>Tue 8 Sep</td><td>Joey &amp; Benek</td><td class="n">$18,000</td><td class="n">—</td><td class="n">1</td><td class="n">$18,000</td><td class="n">$9,000</td><td>Joey</td></tr><tr><td>Tue 8 Sep</td><td>Roy &amp; Chin Eu</td><td class="n">$276.60</td><td class="n">—</td><td class="n">1</td><td class="n">$276.60</td><td class="n">$138.30</td><td>Roy</td></tr><tr><td>Wed 9 Sep</td><td>Roy</td><td class="n">$2,400</td><td class="n">—</td><td class="n">1</td><td class="n">$2,400</td><td class="n">$2,400</td><td>Roy</td></tr><tr><td>Wed 9 Sep</td><td>Roy &amp; Chin Eu</td><td class="n">$42,000</td><td class="n">—</td><td class="n">1</td><td class="n">$42,000</td><td class="n">$21,000</td><td>Roy</td></tr><tr><td>Wed 9 Sep</td><td>Roy &amp; Chin Eu</td><td class="n">—</td><td class="n">$50,000</td><td class="n">0</td><td class="n">$5,000</td><td class="n">$2,500</td><td>Roy</td></tr><tr><td>Thu 10 Sep</td><td>Roy &amp; Alfredo</td><td class="n">$234</td><td class="n">—</td><td class="n">1</td><td class="n">$234</td><td class="n">$117</td><td>Roy</td></tr><tr><td>Sat 12 Sep</td><td>Cheerry Chai</td><td class="n">$2,031</td><td class="n">—</td><td class="n">1</td><td class="n">$2,031</td><td class="n">$2,031</td><td>Cheerry</td></tr><tr><td>Sun 13 Sep</td><td>Wen Jia &amp; Eunice</td><td class="n">$3,600</td><td class="n">—</td><td class="n">1</td><td class="n">$3,600</td><td class="n">$1,800</td><td>Eunice</td></tr><tr><td>Sun 13 Sep</td><td>Wen Jia &amp; Eunice</td><td class="n">$3,600</td><td class="n">—</td><td class="n">1</td><td class="n">$3,600</td><td class="n">$1,800</td><td>Eunice</td></tr><tr><td>Sun 13 Sep</td><td>Wen Jia &amp; Eunice</td><td class="n">$1,800</td><td class="n">—</td><td class="n">1</td><td class="n">$1,800</td><td class="n">$900</td><td>Eunice</td></tr><tr><td>Sun 13 Sep</td><td>Wen Jia &amp; Eunice</td><td class="n">$1,900</td><td class="n">—</td><td class="n">1</td><td class="n">$1,900</td><td class="n">$950</td><td>Eunice</td></tr><tr><td>Mon 14 Sep</td><td>Roy &amp; Benek</td><td class="n">$8,000</td><td class="n">—</td><td class="n">1</td><td class="n">$8,000</td><td class="n">$4,000</td><td>Benek</td></tr><tr><td>Mon 14 Sep</td><td>Eunice</td><td class="n">$4,300</td><td class="n">—</td><td class="n">1</td><td class="n">$4,300</td><td class="n">$4,300</td><td>Eunice</td></tr><tr><td>Tue 15 Sep</td><td>Eunice &amp; Wj.</td><td class="n">$770</td><td class="n">—</td><td class="n">1</td><td class="n">$770</td><td class="n">$385</td><td>Wenjia</td></tr><tr><td>Wed 16 Sep</td><td>Eunice &amp; Jun Kai</td><td class="n">$224</td><td class="n">—</td><td class="n">1</td><td class="n">$224</td><td class="n">$112</td><td>Eunice</td></tr><tr><td>Thu 17 Sep</td><td>Roy &amp; Benek</td><td class="n">$10,000</td><td class="n">—</td><td class="n">0</td><td class="n">$10,000</td><td class="n">$5,000</td><td>Roy</td></tr><tr><td>Thu 17 Sep</td><td>Roy &amp; Joelle</td><td class="n">—</td><td class="n">$90,000</td><td class="n">0</td><td class="n">$9,000</td><td class="n">$4,500</td><td>Roy</td></tr><tr><td>Thu 17 Sep</td><td>Eunice &amp; Jun Kai</td><td class="n">$705.48</td><td class="n">—</td><td class="n">1</td><td class="n">$705.48</td><td class="n">$352.74</td><td>Eunice</td></tr><tr><td>Thu 17 Sep</td><td>Eunice &amp; Jun Kai</td><td class="n">$705.48</td><td class="n">—</td><td class="n">1</td><td class="n">$705.48</td><td class="n">$352.74</td><td>Eunice</td></tr><tr><td>Fri 18 Sep</td><td>Roy &amp; Benek</td><td class="n">$5,300</td><td class="n">—</td><td class="n">1</td><td class="n">$5,300</td><td class="n">$2,650</td><td>Roy</td></tr><tr><td>Fri 18 Sep</td><td>Jun Kai</td><td class="n">—</td><td class="n">$96,000</td><td class="n">0</td><td class="n">$9,600</td><td class="n">$9,600</td><td>Jun Kai</td></tr><tr><td>Sat 19 Sep</td><td>Eunice</td><td class="n">—</td><td class="n">$36,000</td><td class="n">0</td><td class="n">$3,600</td><td class="n">$3,600</td><td>Eunice</td></tr><tr><td>Mon 21 Sep</td><td>Eunice &amp; Jun Kai</td><td class="n">$457.80</td><td class="n">—</td><td class="n">1</td><td class="n">$457.80</td><td class="n">$228.90</td><td>Eunice</td></tr><tr><td>Mon 21 Sep</td><td>Eunice &amp; Jun Kai</td><td class="n">$457.80</td><td class="n">—</td><td class="n">1</td><td class="n">$457.80</td><td class="n">$228.90</td><td>Eunice</td></tr><tr><td>Tue 22 Sep</td><td>Roy &amp; Benek</td><td class="n">$24,000</td><td class="n">—</td><td class="n">0</td><td class="n">$24,000</td><td class="n">$12,000</td><td>Roy</td></tr><tr><td>Tue 22 Sep</td><td>Wenjia &amp; Ziting</td><td class="n">$946</td><td class="n">—</td><td class="n">1</td><td class="n">$946</td><td class="n">$473</td><td>Wenjia</td></tr><tr><td>Tue 22 Sep</td><td>Wenjia &amp; Ziting</td><td class="n">$1,880</td><td class="n">—</td><td class="n">1</td><td class="n">$1,880</td><td class="n">$940</td><td>Wenjia</td></tr><tr><td>Tue 22 Sep</td><td>Wenjia &amp; Ziting</td><td class="n">$7,200</td><td class="n">—</td><td class="n">1</td><td class="n">$7,200</td><td class="n">$3,600</td><td>Wenjia</td></tr><tr><td>Tue 22 Sep</td><td>Eunice</td><td class="n">$535.64</td><td class="n">—</td><td class="n">1</td><td class="n">$535.64</td><td class="n">$535.64</td><td>Eunice</td></tr><tr><td>Thu 24 Sep</td><td>Roy &amp; Immanuel</td><td class="n">$8,000</td><td class="n">—</td><td class="n">1</td><td class="n">$8,000</td><td class="n">$4,000</td><td>Roy</td></tr><tr><td>Thu 24 Sep</td><td>Junxian</td><td class="n">$20,000</td><td class="n">—</td><td class="n">1</td><td class="n">$20,000</td><td class="n">$20,000</td><td>Junxian</td></tr><tr><td>Thu 24 Sep</td><td>Junxian</td><td class="n">$20,000</td><td class="n">—</td><td class="n">1</td><td class="n">$20,000</td><td class="n">$20,000</td><td>Junxian</td></tr><tr><td>Thu 24 Sep</td><td>Wen Jia / Eunice</td><td class="n">$2,880</td><td class="n">—</td><td class="n">1</td><td class="n">$2,880</td><td class="n">$1,440</td><td>Eunice</td></tr><tr><td>Fri 25 Sep</td><td>Roy / Song</td><td class="n">$18,000</td><td class="n">—</td><td class="n">1</td><td class="n">$18,000</td><td class="n">$9,000</td><td>Roy</td></tr><tr><td>Sat 26 Sep</td><td>Eunice / Jun Kai</td><td class="n">$7,800</td><td class="n">—</td><td class="n">1</td><td class="n">$7,800</td><td class="n">$3,900</td><td>Eunice</td></tr><tr><td>Sat 26 Sep</td><td>Joey / Gary</td><td class="n">$457.80</td><td class="n">—</td><td class="n">1</td><td class="n">$457.80</td><td class="n">$228.90</td><td>Joey</td></tr><tr><td>Sat 26 Sep</td><td>Wenjia / Junxian.</td><td class="n">$12,000</td><td class="n">—</td><td class="n">1</td><td class="n">$12,000</td><td class="n">$6,000</td><td>Wenjia</td></tr><tr><td>Sat 26 Sep</td><td>Roy / Joey.</td><td class="n">$197</td><td class="n">—</td><td class="n">1</td><td class="n">$197</td><td class="n">$98.50</td><td>Roy</td></tr><tr><td>Sat 26 Sep</td><td>Roy / Joey.</td><td class="n">$197</td><td class="n">—</td><td class="n">1</td><td class="n">$197</td><td class="n">$98.50</td><td>Roy</td></tr><tr><td>Sat 26 Sep</td><td>Roy / Joey.</td><td class="n">$120</td><td class="n">—</td><td class="n">1</td><td class="n">$120</td><td class="n">$60</td><td>Roy</td></tr><tr><td>Sat 26 Sep</td><td>Roy / Joey.</td><td class="n">$120</td><td class="n">—</td><td class="n">1</td><td class="n">$120</td><td class="n">$60</td><td>Roy</td></tr><tr><td>Sat 26 Sep</td><td>Roy / Joey.</td><td class="n">$1,800</td><td class="n">—</td><td class="n">1</td><td class="n">$1,800</td><td class="n">$900</td><td>Roy</td></tr><tr><td>Sat 26 Sep</td><td>Eunice</td><td class="n">$3,272.92</td><td class="n">—</td><td class="n">1</td><td class="n">$3,272.92</td><td class="n">$3,272.92</td><td>Eunice</td></tr><tr><td>Sat 26 Sep</td><td>Eunice &amp; Zhili</td><td class="n">$3,000</td><td class="n">$560</td><td class="n">1</td><td class="n">$3,056</td><td class="n">$1,528</td><td>Eunice</td></tr><tr><td>Sun 27 Sep</td><td>Eunice</td><td class="n">$2,400</td><td class="n">—</td><td class="n">1</td><td class="n">$2,400</td><td class="n">$2,400</td><td>Eunice</td></tr><tr><td>Sun 27 Sep</td><td>Shawn / Jordan Ong</td><td class="n">$4,800</td><td class="n">—</td><td class="n">1</td><td class="n">$4,800</td><td class="n">$2,400</td><td>Shawn Tan</td></tr><tr><td>Sun 27 Sep</td><td>Eunice</td><td class="n">$1,053.72</td><td class="n">—</td><td class="n">1</td><td class="n">$1,053.72</td><td class="n">$1,053.72</td><td>Eunice</td></tr><tr><td>Mon 28 Sep</td><td>Eunice &amp; Jun Kai</td><td class="n">$10,000</td><td class="n">—</td><td class="n">1</td><td class="n">$10,000</td><td class="n">$5,000</td><td>Eunice</td></tr><tr><td>Wed 30 Sep</td><td>Roy</td><td class="n">$224</td><td class="n">$26,000</td><td class="n">2</td><td class="n">$2,824</td><td class="n">$2,824</td><td>Roy</td></tr><tr><td>Fri 2 Oct</td><td>Eunice &amp; Jun kai</td><td class="n">$224</td><td class="n">$51,009</td><td class="n">2</td><td class="n">$5,324.90</td><td class="n">$2,662.45</td><td>Eunice</td></tr><tr><td>Sat 3 Oct</td><td>Roy &amp; Xin Ni</td><td class="n">$18,000</td><td class="n">—</td><td class="n">1</td><td class="n">$18,000</td><td class="n">$9,000</td><td>Roy</td></tr><tr><td>Sun 4 Oct</td><td>Roy &amp; Benek</td><td class="n">$856</td><td class="n">—</td><td class="n">1</td><td class="n">$856</td><td class="n">$428</td><td>Benek</td></tr><tr><td>Mon 5 Oct</td><td>Yu Hern &amp; Jun Kai</td><td class="n">$2,140</td><td class="n">—</td><td class="n">1</td><td class="n">$2,140</td><td class="n">$1,070</td><td>Jun Kai</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <section class="panel notes">
+    <header class="panel-head"><div><h2>How it's counted</h2></div></header>
+    <p><strong>SP at 10%.</strong> A single premium counts as one tenth of its value toward RP — Roy's $50,000 top-up adds $5,000 of RP-equivalent and no case, because <code>Case: 0</code> means the case was already counted.</p>
+    <p><strong>One RP figure per case.</strong> An RP line carrying several slash-separated figures is read as one case each, so the biggest-case race sees individual cases rather than a day's bundle.</p>
+    <p><strong>Shared cases split.</strong> Two names on the FSC line means half the RP and half a case each, whether or not both names are tracked agents.</p>
+    <p><strong>First case of the day</strong> goes by the time the post landed in the group, and only counts a post that carries a new case.</p>
+    <p><strong>Weeks end on Sunday.</strong> Week 1 is the short launch week, Tue 8 – Sun 13 Sept; every week after that runs Monday to Sunday.</p>
+    <p><strong>Ties split the prize.</strong> Two agents tied on most cases take $15 each, not $30 each.</p>
+  </section>
+
+</div></body></html>
