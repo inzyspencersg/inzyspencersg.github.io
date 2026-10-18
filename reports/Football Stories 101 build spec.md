@@ -1,6 +1,6 @@
 # Football Stories 101: build specification
 
-Version 1, 18 October 2026. This is the hand-off document for the coding session. It turns the research report ("Football stories website plan") plus the owner's decisions into a concrete, buildable plan. Anything marked **DECIDED** is settled by the owner. Anything marked **ASSUMED** is the planner's default and can be overridden before coding starts. Anything marked **LATER** is deliberately deferred.
+Version 1.1, 18 October 2026. This is the hand-off document for the coding session. It turns the research report ("Football stories website plan") plus the owner's decisions into a concrete, buildable plan. Anything marked **DECIDED** is settled by the owner. Anything marked **ASSUMED** is the planner's default and can be overridden before coding starts. Anything marked **LATER** is deliberately deferred.
 
 ---
 
@@ -19,7 +19,7 @@ A free, non-commercial football storytelling publication called **Football Stori
 | Length | 1,200 to 1,800 words per story. **DECIDED** |
 | Send times | 8:00 am SGT Monday to Friday, 10:00 am SGT Saturday and Sunday. **DECIDED** |
 | Visuals | One illustration per story, in the spirit of The Morning Founder's watercolours. Style and production method to be chosen later. **LATER** |
-| Voice | Pen name or brand voice, owner out of frame. **DECIDED** |
+| Voice | Brand voice, byline "The Editor, Football Stories 101", owner out of frame. **DECIDED** |
 | Email first | Yes, the email is the product, the website is the archive. **DECIDED** |
 | Socials | Facebook, Instagram, Threads, Telegram. Not LinkedIn. **DECIDED** |
 | Repository | Likely a new repository, to be confirmed. **LATER** |
@@ -27,12 +27,12 @@ A free, non-commercial football storytelling publication called **Football Stori
 
 ## 3. Planner's assumptions to confirm
 
-1. **Web and email publish at the same moment. ASSUMED.** The Morning Founder holds the website back a week to push people to email. With no commercial motive, simultaneous publishing is simpler and better for sharing. The pipeline will carry a single setting (`WEB_LAG_DAYS`, default 0) so a lag can be switched on later.
-2. **Each story is a numbered issue. ASSUMED.** "Story No. 001" and so on, mirroring the "Plate" numbering, shown on the story page, in the email subject and in the social caption.
-3. **Newsletter provider is Buttondown. ASSUMED.** Reasons: it accepts Markdown, so the exact story file that builds the web page is the email body; it has a full API on every plan including free, which the automated send needs; the archive stays on our site. Cost is free to 100 subscribers, then about US$9 a month. If zero cost matters more, Kit's free tier (reported up to 10,000 subscribers, single-sourced) is the fallback; the send script is written against a thin adapter so the provider can be swapped.
-4. **Domain is footballstories101.com if available, else .co or .net. ASSUMED.** Availability has not been checked from this session. The site works at the github.io address until a domain is bought.
-5. **Four content pillars: Players, Clubs, Eras & Dynasties, Moments. ASSUMED.** "Moments" covers single matches, finals and turning points, which the owner's scope implies but did not name.
-6. **The first thirty stories are written before launch day. ASSUMED, strongly recommended.** See section 8.
+1. **Email first, website one week later. DECIDED.** Exactly The Morning Founder's structure: the email carries the full story at the fixed time, the website publishes the same story seven days later. Implemented as a single setting (`WEB_LAG_DAYS`, default 7); social posts go out on email day and link to the Subscribe page until the web version is live.
+2. **Each story is a numbered issue. DECIDED.** "Story No. 001" and so on, mirroring the "Plate" numbering, shown on the story page, in the email subject and in the social caption.
+3. **Newsletter provider is Buttondown. DECIDED.** Reasons: it accepts Markdown, so the exact story file that builds the web page is the email body; it has a full API on every plan including free, which the automated send needs; the archive stays on our site. Cost is free to 100 subscribers, then about US$9 a month. If zero cost matters more, Kit's free tier (reported up to 10,000 subscribers, single-sourced) is the fallback; the send script is written against a thin adapter so the provider can be swapped. The Morning Founder itself uses beehiiv; beehiiv is a fine alternative but its API, which the automated daily send needs, is not on the free tier, so matching it exactly costs money from day one.
+4. **Domain is footballstories101.com if available, else .co or .net. DECIDED.** Availability has not been checked from this session. The site works at the github.io address until a domain is bought.
+5. **Four content pillars: Players, Clubs, Eras & Dynasties, Moments. DECIDED.** "Moments" covers single matches, finals and turning points, which the owner's scope implies but did not name.
+6. **The first thirty stories are written before launch day. DECIDED.** See section 8.
 
 ## 4. Honest note on the daily cadence
 
@@ -150,7 +150,7 @@ on: push to main     -> rebuild only (no send)
 
 Each scheduled run:
 
-1. **Build** the site including only stories with `date <= now` and `draft: false` (so a story committed days ahead stays hidden until its morning).
+1. **Build** the site including only stories with `date <= now - WEB_LAG_DAYS` and `draft: false`, so a story appears on the web seven days after its email. The home page shows the latest web-published story and a "Today's story is in your inbox" subscribe prompt.
 2. **Deploy** to GitHub Pages.
 3. **Select** today's story: the one whose `date` falls in the last 24 hours and is not yet in `data/sent.json`.
 4. **Send** the email via the provider API: subject "Story No. 001 · Ferenc Puskás / The exile who scored 156 goals for Real Madrid", body is the story Markdown with the hero at the top and a footer linking to the web page and unsubscribe.
@@ -251,11 +251,9 @@ football-stories-101/
 | 5 | Stories 25 to 30; soft launch to friends and football group chats; first recommendation-swap outreach | Fix issues from soft launch; Dependabot; backup export of subscribers |
 | 6 | **Public launch, Story No. 001 goes out at 8:00 am SGT**; keep buffer at 14 | On-call for pipeline issues; hand over runbook |
 
-## 13. Remaining questions for the owner
+## 13. Status of open questions
 
-1. Confirm or change the six assumptions in section 3, especially simultaneous web publishing and Buttondown.
-2. Pen name: do you have one, or should the coding session ship with "The Editor, Football Stories 101" as a placeholder?
-3. Is the first story already in mind? Story No. 001 sets the tone and is the one most people will read; The Morning Founder's first story remains its most-read.
+All assumptions in section 3 were confirmed by the owner on 18 October 2026. The byline is "The Editor, Football Stories 101". Story No. 001 is still to be chosen; it sets the tone and is the one most people will read, so pick it with care.
 
 ## 14. Instruction block for the coding session
 
