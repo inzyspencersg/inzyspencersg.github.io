@@ -343,7 +343,7 @@ const toMap = arr => Object.fromEntries((arr || []).map(x => [x[0], x[1]]));
   const byCases = [...lb].sort((a, b) => b[2] - a[2] || b[1] - a[1]).map(r => [r[0], cs(r[2])]);
   const big = D.cases.filter(c => c.cases > 0 && c.rp > 0 && c.agents && c.agents.length)
                      .sort((a, b) => b.rp - a.rp).map(c => [c.agents.join(" & "), money(Math.round(c.rp))]);
-  $("#race").innerHTML = `<div class="race-h">🏆 Race for the $500s</div>
+  $("#race").innerHTML = `<div class="race-h">🏆 Champions League</div>
     <div class="ln"><span class="k">Aggregate RP</span><span class="v">${fmt(byRp)}</span></div>
     <div class="ln"><span class="k">Biggest case</span><span class="v">${fmt(big)}</span></div>
     <div class="ln"><span class="k">Most cases</span><span class="v">${fmt(byCases)}</span></div>`;
